@@ -1,0 +1,39 @@
+<head>
+  <title>Lists</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="span12">
+        {{> lists}}
+      </div>
+    </div>
+  </div>
+</body>
+
+<template name="lists">
+  {{#each lists}}
+    <div class="row">
+      {{#each this}}
+        <div class="span4 list" data-id="{{_id}}">
+          {{#if _id}}
+          <h4>{{name}} <i class="delete icon-trash"></i></h4>
+          {{> items}}
+          {{else}}
+          <input id="new-list" type="text">
+          {{/if}}
+        </div>
+      {{/each}}
+    </div>
+  {{/each}}
+</template>
+
+<template name="items">
+  <ul class="unstyled">
+    {{#each items}}
+    <li data-id="{{this._id}}">{{this.name}} <i class="delete icon-trash"></i></li>
+    {{/each}}
+  </ul>
+  <input id="new-item" type="text">
+</template>
