@@ -1,6 +1,5 @@
 <head>
   <title>Lists</title>
-  <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -18,13 +17,9 @@
   {{#each lists}}
     <div class="list columns-item" data-id="{{_id}}">
       {{#if _id}}
-      <h2 class="list-header">
-        {{name}}
-        <a class="delete pull-right"><i class="icon-trash"></i></a>
-      </h2>
+      <h2 class="list-header js-list-target">{{name}}</h2>
       {{> items}}
       {{else}}
-
       <input class="list-new-input" type="text">
       {{/if}}
     </div>
@@ -34,7 +29,7 @@
 <template name="items">
   <ol class="list-list unstyled">
     {{#each items}}
-    <li class="list-item" data-id="{{this._id}}">{{this.name}} <a class="js-items-delete pull-right"><i class="icon-trash"></i></a>
+    <li class="list-item js-item-target" data-id="{{this._id}}">{{this.name}}
     {{/each}}
   </ol>
   <input class="list-item-input js-items-new-input" type="text">

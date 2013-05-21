@@ -26,6 +26,12 @@ ul, ol
   list-style none
   padding-left 0
 
+.is-deleting
+  cursor default
+  -moz-user-select none
+  -webkit-user-select none
+  -ms-user-select none
+
 /*
  * Layout
  */
@@ -53,14 +59,17 @@ ul, ol
   border-radius 7px
   height 500px
   width 380px
-  padding 15px 15px
+  padding-top: 15px
   padding-left (15px - input-padding-left)
+  padding-right (15px - input-padding-left)
   background-color #ddd
   margin-bottom 20px
 
 .list-header
   margin-bottom 15px
   margin-left input-padding-left
+.is-deleting .list-header:hover
+  color: red 
 
 .list-list
   margin-left input-padding-left
@@ -68,6 +77,8 @@ ul, ol
 .list-item
   font-size 20px
   margin-bottom 5px
+.is-deleting .list-item:hover
+  color: red 
 
 /*
   &:not(:last-child)
@@ -86,5 +97,6 @@ ul, ol
   width 100%
   padding 2px (input-padding-left)
   margin-top -2px
+  background none
 
 

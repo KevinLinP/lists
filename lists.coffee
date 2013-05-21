@@ -13,10 +13,11 @@ if Meteor.isClient
         input = $(event.currentTarget)
         Lists.insert {name: input.val()}
         input.val('')
-    'click .delete': (event) ->
-      id = $(event.currentTarget).parents('[data-id]').attr 'data-id'
-      Lists.remove {_id: id}
-      Items.remove {listId: id}
+    'click .js-list-target': (event) ->
+      if $('body').hasClass 'is-deleting'
+        id = $(event.currentTarget).parents('[data-id]').attr 'data-id'
+        Lists.remove {_id: id}
+        Items.remove {listId: id}
   }
 
   Template.items.items = ->
@@ -29,9 +30,13 @@ if Meteor.isClient
         listId = input.parents('[data-id]').attr('data-id')
         Items.insert {name: input.val(), listId: listId}
         input.val('')
-    'click .js-items-delete': (event) ->
-      id = $(event.currentTarget).parents('[data-id]').attr 'data-id'
-      Items.remove {_id: id}
+    'click .js-item-target': (event) ->
+      if $('body').hasClass 'is-deleting'
+        window.getSelection().empty()
+        event.preventDefault
+        event.stopPropagation
+        id = $(event.currentTarget).attr 'data-id'
+        Items.remove {_id: id}
   }
 
   $('body').dblclick -> 
