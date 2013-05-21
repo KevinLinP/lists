@@ -3,17 +3,12 @@ Lists = new Meteor.Collection 'lists'
 
 if Meteor.isClient
   Template.lists.lists = ->
-    lists = []
-    for list, i in Lists.find({}).fetch()
-      if i % 3 == 0
-        lists.push []
-      lists[lists.length - 1].push list
-
-    lists[lists.length - 1].push {_id: null}
+    lists = Lists.find({}).fetch()
+    lists.push {_id: null}
     lists
 
   Template.lists.events {
-    'keypress #new-list': (event) ->
+    'keypress .list-new-input': (event) ->
       if event.which == 13
         input = $(event.currentTarget)
         Lists.insert {name: input.val()}
@@ -21,22 +16,26 @@ if Meteor.isClient
     'click .delete': (event) ->
       id = $(event.currentTarget).parents('[data-id]').attr 'data-id'
       Lists.remove {_id: id}
+      Items.remove {listId: id}
   }
 
   Template.items.items = ->
     Items.find {listId: this._id}
 
   Template.items.events {
-    'keypress #new-item': (event) ->
+    'keypress .js-items-new-input': (event) ->
       if event.which == 13
         input = $(event.currentTarget)
-        listId = input.parent('[data-id]').attr('data-id')
+        listId = input.parents('[data-id]').attr('data-id')
         Items.insert {name: input.val(), listId: listId}
         input.val('')
-    'click .delete': (event) ->
-      id = $(event.currentTarget).parent('[data-id]').attr 'data-id'
+    'click .js-items-delete': (event) ->
+      id = $(event.currentTarget).parents('[data-id]').attr 'data-id'
       Items.remove {_id: id}
   }
+
+  $('body').dblclick -> 
+    $('body').toggleClass 'is-editing'
 
 if Meteor.isServer
   Meteor.startup ->
