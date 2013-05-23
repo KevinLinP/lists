@@ -2,6 +2,7 @@
  * Variables
  */
 
+font-color = #333
 fonts = "Helvetica Neue", Helvetica, Arial, sans-serif 
 input-padding-left = 5px
 
@@ -15,7 +16,7 @@ input-padding-left = 5px
   padding 0
 
 body
-  color #333
+  color font-color
   font-family fonts
   font-weight 200
 
@@ -43,6 +44,10 @@ ul, ol
 #header
   margin 20px 5px
 
+#header h1
+  color: #bbb
+  font-size 24px
+
 #content 
   margin-top 20px
 
@@ -65,7 +70,15 @@ ul, ol
   background-color #ddd
   margin-bottom 20px
 
+.list-new
+  border-thickness = 2px
+  background none
+  border solid (border-thickness) #ddd
+  padding-top (15px - border-thickness)
+  padding-left (15px - border-thickness - input-padding-left)
+
 .list-header
+  font-size 24px
   margin-bottom 15px
   margin-left input-padding-left
 .is-deleting .list-header:hover
@@ -80,10 +93,20 @@ ul, ol
 .is-deleting .list-item:hover
   color: red 
 
-/*
-  &:not(:last-child)
-    margin-bottom 5px
- */
+.list-new-input
+  font-family fonts
+  font-size 24px
+  font-weight 200
+  border none
+  border-radius 0
+  box-shadow none
+  &:focus
+    outline none
+  background none
+  padding 2px (input-padding-left)
+  margin-top -2px
+  width 100%
+  color font-color
 
 .list-item-input
   font-family fonts
@@ -98,5 +121,4 @@ ul, ol
   padding 2px (input-padding-left)
   margin-top -2px
   background none
-
-
+  color font-color

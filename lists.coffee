@@ -53,3 +53,4 @@ if Meteor.isServer
     Lists.insert {name: 'list 5'}
     Items.insert {name: 'item 1', listId: listId}
     Items.insert {name: 'item 2', listId: listId}
+

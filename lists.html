@@ -1,11 +1,11 @@
 <head>
-  <title>Lists</title>
+  <title>Lists of Lists</title>
 </head>
 
 <body>
   <div id="container">
     <header id="header">
-      <h1 class="lead">Lists</h1>
+      <h1 class="lead">Lists of Lists</h1>
     </header>
     <div id="content" class="columns">
       {{> lists}}
@@ -15,14 +15,16 @@
 
 <template name="lists">
   {{#each lists}}
-    <div class="list columns-item" data-id="{{_id}}">
-      {{#if _id}}
-      <h2 class="list-header js-list-target">{{name}}</h2>
-      {{> items}}
-      {{else}}
-      <input class="list-new-input" type="text">
-      {{/if}}
-    </div>
+    {{#if _id}}
+      <div class="list columns-item" data-id="{{_id}}">
+        <h1 class="list-header js-list-target">{{name}}</h1>
+        {{> items}}
+      </div>
+    {{else}}
+      <div class="list list-new columns-item" data-id="{{_id}}">
+        <input class="list-new-input" type="text" placeholder="+">
+      </div>
+    {{/if}}
   {{/each}}
 </template>
 
@@ -32,5 +34,5 @@
     <li class="list-item js-item-target" data-id="{{this._id}}">{{this.name}}
     {{/each}}
   </ol>
-  <input class="list-item-input js-items-new-input" type="text">
+  <input class="list-item-input js-items-new-input" type="text" placeholder="+">
 </template>
