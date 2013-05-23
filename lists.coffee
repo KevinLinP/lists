@@ -1,7 +1,16 @@
 Items = new Meteor.Collection 'items'
 Lists = new Meteor.Collection 'lists'
 
+Lists.allow {
+  insert: (userId, list) ->
+    userId && list.owner == userId
+  remove: (userId, list) ->
+    list.owner == userId
+  fetch: ['owner']
+}
+
 if Meteor.isClient
+  Meteor.subscribe 'lists'
   Template.lists.lists = ->
     lists = Lists.find({}).fetch()
     lists.push {_id: null}
@@ -11,7 +20,7 @@ if Meteor.isClient
     'keypress .list-new-input': (event) ->
       if event.which == 13
         input = $(event.currentTarget)
-        Lists.insert {name: input.val()}
+        Lists.insert {owner: Meteor.userId(), name: input.val()}
         input.val('')
     'click .js-list-target': (event) ->
       if $('body').hasClass 'is-deleting'
@@ -43,14 +52,10 @@ if Meteor.isClient
     $('body').toggleClass 'is-editing'
 
 if Meteor.isServer
+  Meteor.publish 'lists', ->
+    Lists.find {owner: this.userId}
+
   Meteor.startup ->
     Lists.remove {}
     Items.remove {}
-    listId = Lists.insert {name: 'list 1'}
-    Lists.insert {name: 'list 2'}
-    Lists.insert {name: 'list 3'}
-    Lists.insert {name: 'list 4'}
-    Lists.insert {name: 'list 5'}
-    Items.insert {name: 'item 1', listId: listId}
-    Items.insert {name: 'item 2', listId: listId}
 

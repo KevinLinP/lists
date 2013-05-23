@@ -3,14 +3,17 @@
 </head>
 
 <body>
-  <div id="container">
-    <header id="header">
-      <h1 class="lead">Lists of Lists</h1>
-    </header>
-    <div id="content" class="columns">
-      {{> lists}}
+  {{loginButtons}}
+  {{#if currentUser}}
+    <div id="container">
+      <header id="header">
+        <h1 class="lead">Lists of Lists</h1>
+      </header>
+      <div id="content" class="columns">
+        {{> lists}}
+      </div>
     </div>
-  </div>
+  {{/if}}
 </body>
 
 <template name="lists">
