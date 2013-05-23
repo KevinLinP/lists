@@ -3,7 +3,7 @@ Lists = new Meteor.Collection 'lists'
 
 Lists.allow {
   insert: (userId, list) ->
-    userId && list.owner == userId
+    userId && list.owner == userId && list.name.length > 0
   remove: (userId, list) ->
     (list.owner == userId) && _.isUndefined(Items.findOne({listId: list._id}))
   fetch: ['owner']
@@ -11,7 +11,7 @@ Lists.allow {
 
 Items.allow {
   insert: (userId, item) ->
-    userId && item.owner == userId && Lists.findOne({owner: userId, _id: item.listId}) != null
+    userId && item.name.length > 0 && item.owner == userId && Lists.findOne({owner: userId, _id: item.listId}) != null
   remove: (userId, item) ->
     item.owner == userId
   fetch: ['owner']
