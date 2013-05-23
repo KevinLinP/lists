@@ -5,12 +5,22 @@ Lists.allow {
   insert: (userId, list) ->
     userId && list.owner == userId
   remove: (userId, list) ->
-    list.owner == userId
+    (list.owner == userId) && _.isUndefined(Items.findOne({listId: list._id}))
+  fetch: ['owner']
+}
+
+Items.allow {
+  insert: (userId, item) ->
+    userId && item.owner == userId && Lists.findOne({owner: userId, _id: item.listId}) != null
+  remove: (userId, item) ->
+    item.owner == userId
   fetch: ['owner']
 }
 
 if Meteor.isClient
   Meteor.subscribe 'lists'
+  Meteor.subscribe 'items'
+
   Template.lists.lists = ->
     lists = Lists.find({}).fetch()
     lists.push {_id: null}
@@ -25,8 +35,7 @@ if Meteor.isClient
     'click .js-list-target': (event) ->
       if $('body').hasClass 'is-deleting'
         id = $(event.currentTarget).parents('[data-id]').attr 'data-id'
-        Lists.remove {_id: id}
-        Items.remove {listId: id}
+        Lists.remove id
   }
 
   Template.items.items = ->
@@ -37,7 +46,7 @@ if Meteor.isClient
       if event.which == 13
         input = $(event.currentTarget)
         listId = input.parents('[data-id]').attr('data-id')
-        Items.insert {name: input.val(), listId: listId}
+        Items.insert {owner: Meteor.userId(), name: input.val(), listId: listId}
         input.val('')
     'click .js-item-target': (event) ->
       if $('body').hasClass 'is-deleting'
@@ -45,17 +54,23 @@ if Meteor.isClient
         event.preventDefault
         event.stopPropagation
         id = $(event.currentTarget).attr 'data-id'
-        Items.remove {_id: id}
+        Items.remove id
   }
 
-  $('body').dblclick -> 
+  $('body').dblclick ->
     $('body').toggleClass 'is-editing'
 
 if Meteor.isServer
   Meteor.publish 'lists', ->
     Lists.find {owner: this.userId}
+  Meteor.publish 'items', ->
+    Items.find {owner: this.userId}
 
+  Accounts.validateNewUser (user) ->
+    user.emails[0].address == 'kevin.lin.p@gmail.com'
+
+  ###
   Meteor.startup ->
     Lists.remove {}
     Items.remove {}
-
+  ###
