@@ -22,12 +22,12 @@
   {{#each lists}}
     {{#if _id}}
       <div class="list columns-item" data-id="{{_id}}">
-        <h1 class="list-header js-list-target">{{name}}</h1>
+        <input type="text" class="list-header js-list-input" value="{{name}}" />
         {{> items}}
       </div>
     {{else}}
-      <div class="list list-new columns-item" data-id="{{_id}}">
-        <input class="list-new-input" type="text" placeholder="+">
+      <div class="list list-new columns-item">
+        <input class="list-header js-list-new-input" type="text" placeholder="+">
       </div>
     {{/if}}
   {{/each}}
@@ -36,8 +36,8 @@
 <template name="items">
   <ol class="list-list unstyled">
     {{#each items}}
-    <li class="list-item js-item-target" data-id="{{this._id}}">{{this.name}}
+    <li data-id="{{this._id}}"><input class="list-item js-item-input" type="text" value="{{name}}"/></li>
     {{/each}}
+    <li><input type="text" class="list-item js-item-new-input" placeholder="+" /></li>
   </ol>
-  <input class="list-item-input js-items-new-input" type="text" placeholder="+">
 </template>

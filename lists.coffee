@@ -4,6 +4,8 @@ Lists = new Meteor.Collection 'lists'
 Lists.allow {
   insert: (userId, list) ->
     userId && list.owner == userId && list.name.length > 0
+  update: (userId, list, fields, modifier) ->
+    userId
   remove: (userId, list) ->
     (list.owner == userId) && _.isUndefined(Items.findOne({listId: list._id}))
   fetch: ['owner']
@@ -12,9 +14,21 @@ Lists.allow {
 Items.allow {
   insert: (userId, item) ->
     userId && item.name.length > 0 && item.owner == userId && Lists.findOne({owner: userId, _id: item.listId}) != null
+  update: (userId, item, fields, modifier) ->
+    userId
   remove: (userId, item) ->
     item.owner == userId
   fetch: ['owner']
+}
+
+Lists.deny {
+  update: (userId, list, fields, modifier) ->
+    return _.contains(fields, 'owner')
+}
+
+Items.deny {
+  update: (userId, item, fields, modifier) ->
+    return _.contains(fields, 'owner')
 }
 
 if Meteor.isClient
@@ -27,12 +41,16 @@ if Meteor.isClient
     lists
 
   Template.lists.events {
-    'keypress .list-new-input': (event) ->
+    'keypress .js-list-new-input': (event) ->
       if event.which == 13
         input = $(event.currentTarget)
         Lists.insert {owner: Meteor.userId(), name: input.val()}
         input.val('')
-    'click .js-list-target': (event) ->
+    'blur .js-list-input': (event) ->
+        input = $(event.currentTarget)
+        id = input.parents('[data-id]').attr('data-id')
+        Lists.update id, {$set: {name: input.val()}}
+    'click .js-list-input': (event) ->
       if $('body').hasClass 'is-deleting'
         id = $(event.currentTarget).parents('[data-id]').attr 'data-id'
         Lists.remove id
@@ -42,23 +60,21 @@ if Meteor.isClient
     Items.find {listId: this._id}
 
   Template.items.events {
-    'keypress .js-items-new-input': (event) ->
+    'keypress .js-item-new-input': (event) ->
       if event.which == 13
         input = $(event.currentTarget)
         listId = input.parents('[data-id]').attr('data-id')
         Items.insert {owner: Meteor.userId(), name: input.val(), listId: listId}
         input.val('')
-    'click .js-item-target': (event) ->
+    'blur .js-item-input': (event) ->
+        input = $(event.currentTarget)
+        id = input.parents('[data-id]').attr('data-id')
+        Items.update id, {$set: {name: input.val()}}
+    'click .js-item-input': (event) ->
       if $('body').hasClass 'is-deleting'
-        window.getSelection().empty()
-        event.preventDefault
-        event.stopPropagation
-        id = $(event.currentTarget).attr 'data-id'
+        id = $(event.currentTarget).parent('[data-id]').attr 'data-id'
         Items.remove id
   }
-
-  $('body').dblclick ->
-    $('body').toggleClass 'is-editing'
 
 if Meteor.isServer
   Meteor.publish 'lists', ->

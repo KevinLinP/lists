@@ -4,7 +4,18 @@
 
 font-color = #333
 fonts = "Helvetica Neue", Helvetica, Arial, sans-serif 
-input-padding-left = 5px
+
+invisible-input()
+  font-family fonts
+  font-weight 200
+  border none
+  border-radius 0
+  box-shadow none
+  &:focus
+    outline none
+  background none
+  color font-color
+  width 100%
 
 /*
  * Base
@@ -26,12 +37,6 @@ h1, h2, h3, h4, h5, h6, h7
 ul, ol
   list-style none
   padding-left 0
-
-.is-deleting
-  cursor default
-  -moz-user-select none
-  -webkit-user-select none
-  -ms-user-select none
 
 /*
  * Layout
@@ -69,9 +74,7 @@ ul, ol
   border-radius 7px
   height 500px
   width 380px
-  padding-top: 15px
-  padding-left (15px - input-padding-left)
-  padding-right (15px - input-padding-left)
+  padding 15px
   background-color #ddd
   margin-bottom 20px
 
@@ -80,50 +83,28 @@ ul, ol
   background none
   border solid (border-thickness) #ddd
   padding-top (15px - border-thickness)
-  padding-left (15px - border-thickness - input-padding-left)
+  padding-left (15px - border-thickness)
 
 .list-header
+  invisible-input()
   font-size 24px
   margin-bottom 15px
-  margin-left input-padding-left
 .is-deleting .list-header:hover
+  cursor: default
   color: red 
 
 .list-list
-  margin-left input-padding-left
 
 .list-item
+  invisible-input()
+  margin-bottom: 5px
   font-size 20px
-  margin-bottom 5px
 .is-deleting .list-item:hover
+  cursor: default
   color: red 
 
-.list-new-input
-  font-family fonts
-  font-size 24px
-  font-weight 200
-  border none
-  border-radius 0
-  box-shadow none
-  &:focus
-    outline none
-  background none
-  padding 2px (input-padding-left)
-  margin-top -2px
-  width 100%
-  color font-color
-
 .list-item-input
-  font-family fonts
+  invisible-input()
   font-size 20px
-  font-weight 200
-  border none
-  border-radius 0
-  box-shadow none
-  &:focus
-    outline none
   width 100%
-  padding 2px (input-padding-left)
   margin-top -2px
-  background none
-  color font-color
