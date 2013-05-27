@@ -22,17 +22,14 @@
 
 <template name="lists">
   {{#each lists}}
-    {{#if _id}}
-      <div class="list columns-item" data-id="{{_id}}">
-        <input type="text" class="list-header js-list-input" value="{{name}}" />
-        {{> items}}
-      </div>
-    {{else}}
-      <div class="list list-new columns-item">
-        <input class="list-header js-list-new-input" type="text" placeholder="+">
-      </div>
-    {{/if}}
+    <div class="list columns-item" data-id="{{_id}}">
+      <input type="text" class="list-header js-list-input" value="{{name}}" />
+      {{> items}}
+    </div>
   {{/each}}
+  <div class="list list-new columns-item">
+    <input class="list-header js-list-new-input" type="text" placeholder="+">
+  </div>
 </template>
 
 <template name="items">

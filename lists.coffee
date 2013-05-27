@@ -36,9 +36,7 @@ if Meteor.isClient
   Meteor.subscribe 'items'
 
   Template.lists.lists = ->
-    lists = Lists.find({}).fetch()
-    lists.push {_id: null}
-    lists
+    Lists.find {}, {sort: ['position']}
 
   Template.lists.events {
     'keypress .js-list-new-input': (event) ->
@@ -57,8 +55,16 @@ if Meteor.isClient
   }
 
   Template.lists.rendered = ->
+    $('#content').sortable {
+      items: '> :not(:last-child)'
+      update: (event, ui) ->
+        ids = $(event.target).sortable('toArray', {attribute: 'data-id'})
+        _.each ids, (id, index, ids) ->
+          Lists.update id, {$set: {position: index}}
+    }
     $('.js-list-list').sortable {
       items: '> li:not(:last-child)'
+      handle: '.handle'
       axis: 'y',
       update: (event, ui) ->
         ids = $(event.target).sortable('toArray', {attribute: 'data-id'})
@@ -67,7 +73,7 @@ if Meteor.isClient
     }
 
   Template.items.items = ->
-    Items.find {listId: this._id}, {sort: {position: 1}}
+    Items.find {listId: this._id}, {sort: ['position']}
 
   Template.items.events {
     'keypress .js-item-new-input': (event) ->
