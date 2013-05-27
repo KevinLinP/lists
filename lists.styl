@@ -4,6 +4,7 @@
 
 font-color = #333
 fonts = "Helvetica Neue", Helvetica, Arial, sans-serif 
+header-font-color = #bbb
 
 invisible-input()
   font-family fonts
@@ -50,6 +51,8 @@ ul, ol
   margin 20px 5px
 
 #header h1
+  display inline-block
+  margin-right 12px
   color #bbb
   font-size 24px
 
@@ -68,6 +71,20 @@ ul, ol
 .columns-item
   vertical-align top
   margin 5px
+
+.groups
+  display inline-block
+
+.groups > li
+  font-size 24px
+  display inline-block
+  color header-font-color
+  &:not(:last-child)
+    margin-right 10px
+
+.is-deleting .group:hover
+  cursor default
+  color red 
   
 .list 
   display inline-block

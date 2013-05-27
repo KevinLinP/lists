@@ -10,8 +10,9 @@
     <div id="container">
       <header id="header">
         <h1 class="lead">Lists of Lists</h1>
+        {{> groups}}
       </header>
-      <div id="content" class="columns">
+      <div id="lists" class="columns">
         {{> lists}}
       </div>
     </div>
@@ -19,6 +20,15 @@
     {{loginButtons}}
   {{/if}}
 </body>
+
+<template name="groups">
+  <ol class="groups">
+  {{#each groups}}
+  <li class="group js-group-input" data-id="{{_id}}">{{name}}</li>
+  {{/each}}
+  <li><input type="text" class="group js-group-new-input"/></li>
+  </ol>
+</template>
 
 <template name="lists">
   {{#each lists}}
