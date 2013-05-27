@@ -51,6 +51,9 @@ if Meteor.isClient
   Template.groups.groups = ->
     Groups.find {}, {sort: ['position']}
 
+  Template.groups.isActive = (group) ->
+    group._id == Session.get 'currentGroup'
+
   Template.lists.lists = ->
     Lists.find {}, {sort: ['position']}
 
@@ -66,8 +69,9 @@ if Meteor.isClient
         position = Groups.find({}).count()
         Groups.insert {owner: Meteor.userId(), name: input.val(), position: position}
         input.val('')
-    'click .js-group-input': (event) ->
+    'click .groups-group': (event) ->
       id = $(event.currentTarget).attr 'data-id'
+      return unless id
 
       if $('body').hasClass 'is-deleting'
         Groups.remove id

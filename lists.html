@@ -24,9 +24,13 @@
 <template name="groups">
   <ol class="groups">
   {{#each groups}}
-  <li class="group js-group-input" data-id="{{_id}}">{{name}}</li>
+    {{#if isActive this}}
+    <li class="groups-group is-active" data-id="{{_id}}">{{name}}</li>
+    {{else}}
+    <li class="groups-group" data-id="{{_id}}">{{name}}</li>
+    {{/if}}
   {{/each}}
-  <li><input type="text" class="group js-group-new-input"/></li>
+  <li class="groups-group"><input type="text" class="js-group-new-input" placeholder="+"/></li>
   </ol>
 </template>
 

@@ -75,14 +75,25 @@ ul, ol
 .groups
   display inline-block
 
-.groups > li
+.groups-group
   font-size 24px
-  display inline-block
   color header-font-color
+  display inline-block
+  -moz-user-select none
+  -webkit-user-select none
+  -ms-user-select none
+  cursor: default
   &:not(:last-child)
     margin-right 10px
+  &.is-active
+    color font-color
 
-.is-deleting .group:hover
+  & > input
+    invisible-input()
+    color header-font-color
+    font-size 24px
+
+.is-deleting .groups-group:hover
   cursor default
   color red 
   
