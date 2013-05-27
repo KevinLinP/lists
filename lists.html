@@ -22,12 +22,19 @@
 </body>
 
 <template name="groups">
-  <ol class="groups">
+  <ol class="groups" id="groups">
   {{#each groups}}
     {{#if isActive this}}
-    <li class="groups-group is-active" data-id="{{_id}}">{{name}}</li>
+    <li class="groups-group is-active" data-id="{{_id}}">
+      <input class="js-group-input hidden" value="{{name}}" />
+      <span class="groups-name js-group-target">{{name}}</span>
+      <span class="group-handle"><i class="icon-reorder"></i></span>
+    </li>
     {{else}}
-    <li class="groups-group" data-id="{{_id}}">{{name}}</li>
+    <li class="groups-group" data-id="{{_id}}">
+      <span class="groups-name js-group-target">{{name}}</span>
+      <span class="group-handle"><i class="icon-reorder"></i></span>
+    </li>
     {{/if}}
   {{/each}}
   <li class="groups-group"><input type="text" class="js-group-new-input" placeholder="+"/></li>
@@ -51,7 +58,7 @@
 <template name="items">
   <ol class="list-list js-list-list">
     {{#each items}}
-    <li data-id="{{this._id}}"><input class="list-item js-item-input" type="text" value="{{name}}"/><i class="icon-reorder icon-large handle pull-right"></i></li>
+    <li data-id="{{this._id}}"><input class="list-item js-item-input" type="text" value="{{name}}"/><i class="icon-reorder icon-large item-handle pull-right"></i></li>
     {{/each}}
     <li><input type="text" class="list-item js-item-new-input" placeholder="+" /></li>
   </ol>

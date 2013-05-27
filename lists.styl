@@ -76,6 +76,7 @@ ul, ol
   display inline-block
 
 .groups-group
+  position relative // for handle positioning
   font-size 24px
   color header-font-color
   display inline-block
@@ -85,15 +86,22 @@ ul, ol
   cursor: default
   &:not(:last-child)
     margin-right 10px
-  &.is-active
-    color font-color
-
   & > input
     invisible-input()
     color header-font-color
     font-size 24px
+  &.is-active
+    color font-color
+  &.is-active > input
+    color font-color
 
-.is-deleting .groups-group:hover
+.group-handle
+  display none
+.is-sorting .group-handle
+  color header-font-color
+  display inline
+
+.is-deleting .groups-name:hover
   cursor default
   color red 
   
@@ -124,10 +132,10 @@ ul, ol
 .list-list
   width 355px
 
-.handle
+.item-handle
   color #aaa
   opacity 0.0
-.is-sorting .handle
+.is-sorting .item-handle
   opacity 1.0
 
 .list-item
@@ -147,3 +155,6 @@ ul, ol
 
 .pull-right
   float right
+
+.hidden
+  display none

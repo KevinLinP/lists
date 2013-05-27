@@ -69,18 +69,43 @@ if Meteor.isClient
         position = Groups.find({}).count()
         Groups.insert {owner: Meteor.userId(), name: input.val(), position: position}
         input.val('')
-    'click .groups-group': (event) ->
-      id = $(event.currentTarget).attr 'data-id'
+    'click .js-group-target': (event) ->
+      target = $(event.currentTarget)
+      currentGroupId = Session.get('currentGroup')
+      id = target.parents('[data-id]').attr 'data-id'
       return unless id
 
       if $('body').hasClass 'is-deleting'
         Groups.remove id
-
-        if id == Session.get('currentGroup')
+        if id == currentGroupId
           Session.set 'currentGroup', null
       else
-        Session.set 'currentGroup', id
+        if id == currentGroupId
+          target.addClass 'hidden'
+          input = target.siblings('.js-group-input')
+          input.removeClass 'hidden'
+          input.focus()
+        else
+          Session.set 'currentGroup', id
+    'keypress .js-group-input, blur .js-group-input': (event) ->
+      if (event.type == 'blur') || (event.which == 13)
+        input = $(event.currentTarget)
+        id = input.parents('[data-id]').attr 'data-id'
+        Groups.update id, {$set: {name: input.val()}}
+        Deps.flush()
+        input.addClass 'hidden'
+        input.siblings('.js-group-target').removeClass 'hidden'
   }
+
+  Template.groups.rendered = -> 
+    $('#groups').sortable {
+      items: '> :not(:last-child)'
+      handle: '.group-handle'
+      update: (event, ui) ->
+        ids = $(event.target).sortable('toArray', {attribute: 'data-id'})
+        _.each ids, (id, index, ids) ->
+          Groups.update id, {$set: {position: index}}
+    }
 
   Template.lists.events {
     'keypress .js-list-new-input': (event) ->
@@ -154,3 +179,10 @@ if Meteor.isServer
   Accounts.validateNewUser (user) ->
     user.emails[0].address == 'kevin.lin.p@gmail.com'
 
+
+  ### 
+  Meteor.startup ->
+    Groups.remove {}
+    Lists.remove {}
+    Items.remove {}
+  ###
