@@ -35,15 +35,17 @@
 </template>
 
 <template name="lists">
-  {{#each lists}}
-    <div class="list columns-item" data-id="{{_id}}">
-      <input type="text" class="list-header js-list-input" value="{{name}}" />
-      {{> items}}
+  {{#if groupSelected}}
+    {{#each lists}}
+      <div class="list columns-item" data-id="{{_id}}">
+        <input type="text" class="list-header js-list-input" value="{{name}}" />
+        {{> items}}
+      </div>
+    {{/each}}
+    <div class="list list-new columns-item">
+      <input class="list-header js-list-new-input" type="text" placeholder="+">
     </div>
-  {{/each}}
-  <div class="list list-new columns-item">
-    <input class="list-header js-list-new-input" type="text" placeholder="+">
-  </div>
+  {{/if}}
 </template>
 
 <template name="items">

@@ -75,6 +75,9 @@ if Meteor.isClient
 
       if $('body').hasClass 'is-deleting'
         Groups.remove id
+
+        if id == Session.get('currentGroup')
+          Session.set 'currentGroup', null
       else
         Session.set 'currentGroup', id
   }
@@ -116,6 +119,9 @@ if Meteor.isClient
           Items.update id, {$set: {position: index}}
     }
 
+  Template.lists.groupSelected = ->
+    Session.get('currentGroup') != null
+
   Template.items.items = ->
     Items.find {listId: this._id}, {sort: ['position']}
 
@@ -136,7 +142,7 @@ if Meteor.isClient
         id = $(event.currentTarget).parent('[data-id]').attr 'data-id'
         Items.remove id
   }
-
+  
 if Meteor.isServer
   Meteor.publish 'groups', ->
     Groups.find {owner: this.userId}
@@ -148,6 +154,3 @@ if Meteor.isServer
   Accounts.validateNewUser (user) ->
     user.emails[0].address == 'kevin.lin.p@gmail.com'
 
-  Meteor.startup ->
-    Lists.remove {}
-    Items.remove {}
