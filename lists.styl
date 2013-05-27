@@ -50,14 +50,14 @@ ul, ol
   margin 20px 5px
 
 #header h1
-  color: #bbb
+  color #bbb
   font-size 24px
 
 #content 
   margin-top 20px
 
 .is-logged-in > #login-buttons
-  opacity: 0
+  opacity 0
   &:hover
     opacity 1
 
@@ -90,21 +90,32 @@ ul, ol
   font-size 24px
   margin-bottom 15px
 .is-deleting .list-header:hover
-  cursor: default
-  color: red 
+  cursor default
+  color red 
 
 .list-list
+  width 355px
+
+.handle
+  color #aaa
+  opacity 0.0
+.is-sorting .handle
+  opacity 1.0
 
 .list-item
   invisible-input()
-  margin-bottom: 5px
+  width 90%
+  margin-bottom 5px
   font-size 20px
 .is-deleting .list-item:hover
-  cursor: default
-  color: red 
+  cursor default
+  color red 
 
 .list-item-input
   invisible-input()
   font-size 20px
   width 100%
   margin-top -2px
+
+.pull-right
+  float right

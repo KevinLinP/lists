@@ -1,5 +1,7 @@
 <head>
   <title>Lists of Lists</title>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.min.css" rel="stylesheet">
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 </head>
 
 <body>
@@ -34,9 +36,9 @@
 </template>
 
 <template name="items">
-  <ol class="list-list unstyled">
+  <ol class="list-list js-list-list">
     {{#each items}}
-    <li data-id="{{this._id}}"><input class="list-item js-item-input" type="text" value="{{name}}"/></li>
+    <li data-id="{{this._id}}"><input class="list-item js-item-input" type="text" value="{{name}}"/><i class="icon-reorder icon-large handle pull-right"></i></li>
     {{/each}}
     <li><input type="text" class="list-item js-item-new-input" placeholder="+" /></li>
   </ol>

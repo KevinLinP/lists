@@ -56,15 +56,26 @@ if Meteor.isClient
         Lists.remove id
   }
 
+  Template.lists.rendered = ->
+    $('.js-list-list').sortable {
+      items: '> li:not(:last-child)'
+      axis: 'y',
+      update: (event, ui) ->
+        ids = $(event.target).sortable('toArray', {attribute: 'data-id'})
+        _.each ids, (id, index, ids) ->
+          Items.update id, {$set: {position: index}}
+    }
+
   Template.items.items = ->
-    Items.find {listId: this._id}
+    Items.find {listId: this._id}, {sort: {position: 1}}
 
   Template.items.events {
     'keypress .js-item-new-input': (event) ->
       if event.which == 13
         input = $(event.currentTarget)
         listId = input.parents('[data-id]').attr('data-id')
-        Items.insert {owner: Meteor.userId(), name: input.val(), listId: listId}
+        position = Items.find({listId: listId}).count()
+        Items.insert {owner: Meteor.userId(), name: input.val(), listId: listId, position: position}
         input.val('')
     'blur .js-item-input': (event) ->
         input = $(event.currentTarget)
