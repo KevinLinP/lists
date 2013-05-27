@@ -3,6 +3,8 @@ Items = new Meteor.Collection 'items'
 Lists = new Meteor.Collection 'lists'
 
 # TODO: refactor permissions
+# TODO: fix window unfocus while shifted
+# TODO: consolidate is-deleting and is-sorting
 
 Groups.allow {
   insert: (userId, group) ->
@@ -68,7 +70,7 @@ if Meteor.isClient
     'keypress .js-group-new-input': (event) ->
       if event.which == 13
         input = $(event.currentTarget)
-        position = Groups.find({}).count()
+        position = Groups.findOne({}, {sort: {position: -1}}).position + 1
         Groups.insert {owner: Meteor.userId(), name: input.val(), position: position}
         input.val('')
         # TODO: focuses items input on completion
@@ -102,7 +104,7 @@ if Meteor.isClient
         input.siblings('.js-group-target').removeClass 'hidden'
   }
 
-  Template.groups.rendered = -> 
+  Template.groups.rendered = ->
     $('#groups').sortable {
       items: '> :not(:last-child)'
       handle: '.group-handle'
@@ -110,6 +112,14 @@ if Meteor.isClient
         ids = $(event.target).sortable('toArray', {attribute: 'data-id'})
         _.each ids, (id, index, ids) ->
           Groups.update id, {$set: {position: index}}
+    }
+    $('.groups-group').droppable {
+      accept: '.list'
+      tolerance: 'pointer'
+      drop: (event, ui) ->
+        groupId = $(this).attr 'data-id'
+        listId = ui.draggable.attr 'data-id'
+        Lists.update listId, {$set: {groupId: groupId, position: 0}}
     }
 
   Template.lists.events {
@@ -119,7 +129,7 @@ if Meteor.isClient
         input = $(event.currentTarget)
         group = Groups.findOne(Session.get('currentGroup'))
         return false unless group
-        position = Lists.find({}).count()
+        position = Lists.findOne({}, {sort: {position: -1}}).position + 1
         Lists.insert {owner: Meteor.userId(), groupId: group._id, name: input.val(), position: position}
         input.val('')
     'blur .js-list-input': (event) ->
@@ -135,6 +145,7 @@ if Meteor.isClient
   Template.lists.rendered = ->
     $('#lists').sortable {
       items: '> :not(:last-child)'
+      handle: '.list-handle'
       update: (event, ui) ->
         ids = $(event.target).sortable('toArray', {attribute: 'data-id'})
         _.each ids, (id, index, ids) ->
@@ -142,7 +153,7 @@ if Meteor.isClient
     }
     $('.js-list-list').sortable {
       items: '> li:not(:last-child)'
-      handle: '.handle'
+      handle: '.item-handle'
       axis: 'y',
       update: (event, ui) ->
         ids = $(event.target).sortable('toArray', {attribute: 'data-id'})
@@ -161,7 +172,7 @@ if Meteor.isClient
       if event.which == 13
         input = $(event.currentTarget)
         listId = input.parents('[data-id]').attr('data-id')
-        position = Items.find({listId: listId}).count()
+        position = Items.findOne({listId: listId}, {sort: {position: -1}}) + 1
         Items.insert {owner: Meteor.userId(), name: input.val(), listId: listId, position: position}
         input.val('')
     'blur .js-item-input': (event) ->
@@ -173,6 +184,8 @@ if Meteor.isClient
         id = $(event.currentTarget).parent('[data-id]').attr 'data-id'
         Items.remove id
   }
+
+
   
 if Meteor.isServer
   Meteor.publish 'groups', ->
@@ -181,6 +194,8 @@ if Meteor.isServer
     Lists.find {owner: this.userId, groupId: groupId}
   Meteor.publish 'items', (groupId) ->
     Items.find {owner: this.userId}
+
+  # TODO: fix list order logic on list move
 
   Accounts.validateNewUser (user) ->
     user.emails[0].address == 'kevin.lin.p@gmail.com'

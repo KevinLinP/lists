@@ -45,6 +45,7 @@
   {{#if groupSelected}}
     {{#each lists}}
       <div class="list columns-item" data-id="{{_id}}">
+        <span class="list-handle"><i class="icon-reorder"></i></span>
         <input type="text" class="list-header js-list-input" value="{{name}}" />
         {{> items}}
       </div>

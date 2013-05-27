@@ -2,6 +2,8 @@
  * Variables
  */
 
+// TODO: css animations flash on create, shift on destroy, etc, flash on failed validation
+
 font-color = #333
 fonts = "Helvetica Neue", Helvetica, Arial, sans-serif 
 header-font-color = #bbb
@@ -108,8 +110,11 @@ ul, ol
 .is-deleting .groups-name:hover
   cursor default
   color red 
-  
+
+list-handle-color = #aaa
+
 .list 
+  position relative // for list-handle positioning
   display inline-block
   border-radius 7px
   height 500px
@@ -117,6 +122,16 @@ ul, ol
   padding 15px
   background-color #ddd
   margin-bottom 20px
+
+.list-handle
+  display none
+  position absolute
+  top 15px
+  right 15px
+  color list-handle-color
+  font-size 24px
+.is-sorting .list-handle
+  display inline
 
 .list-new
   border-thickness = 2px
@@ -137,7 +152,7 @@ ul, ol
   width 355px
 
 .item-handle
-  color #aaa
+  color list-handle-color
   opacity 0.0
 .is-sorting .item-handle
   opacity 1.0
