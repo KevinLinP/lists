@@ -2,6 +2,8 @@ Groups = new Meteor.Collection 'groups'
 Items = new Meteor.Collection 'items'
 Lists = new Meteor.Collection 'lists'
 
+# TODO: refactor permissions
+
 Groups.allow {
   insert: (userId, group) ->
     userId && group.owner == userId && group.name.length > 0
@@ -69,6 +71,8 @@ if Meteor.isClient
         position = Groups.find({}).count()
         Groups.insert {owner: Meteor.userId(), name: input.val(), position: position}
         input.val('')
+        # TODO: focuses items input on completion
+    # TODO: refactor!
     'click .js-group-target': (event) ->
       target = $(event.currentTarget)
       currentGroupId = Session.get('currentGroup')
@@ -77,6 +81,7 @@ if Meteor.isClient
 
       if $('body').hasClass 'is-deleting'
         Groups.remove id
+        # TODO: smarter reassignment
         if id == currentGroupId
           Session.set 'currentGroup', null
       else
@@ -108,6 +113,7 @@ if Meteor.isClient
     }
 
   Template.lists.events {
+    # TODO: blurable also
     'keypress .js-list-new-input': (event) ->
       if event.which == 13
         input = $(event.currentTarget)
@@ -179,10 +185,10 @@ if Meteor.isServer
   Accounts.validateNewUser (user) ->
     user.emails[0].address == 'kevin.lin.p@gmail.com'
 
-
   ### 
   Meteor.startup ->
     Groups.remove {}
     Lists.remove {}
     Items.remove {}
   ###
+  
