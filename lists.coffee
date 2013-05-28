@@ -2,9 +2,16 @@ Groups = new Meteor.Collection 'groups'
 Items = new Meteor.Collection 'items'
 Lists = new Meteor.Collection 'lists'
 
+
+# TODO: double check blur = write
+# TODO: don't use shift as modifier -_-
+# TODO: examine switching groups lag time
+# TODO: debug initial list on load
+# TODO: debug empty input not disappearing when no group selected in production (old meteor bug maybe?)
 # TODO: refactor permissions
 # TODO: fix window unfocus while shifted
 # TODO: consolidate is-deleting and is-sorting
+# TODO: Max items? or scrollable?
 
 Groups.allow {
   insert: (userId, group) ->
