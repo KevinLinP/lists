@@ -70,7 +70,8 @@ if Meteor.isClient
     'keypress .js-group-new-input': (event) ->
       if event.which == 13
         input = $(event.currentTarget)
-        position = Groups.findOne({}, {sort: {position: -1}}).position + 1
+        lastGroup = Groups.findOne({}, {sort: {position: -1}})
+        position = if lastGroup then (lastGroup.position + 1) else 0
         Groups.insert {owner: Meteor.userId(), name: input.val(), position: position}
         input.val('')
         # TODO: focuses items input on completion
@@ -129,7 +130,8 @@ if Meteor.isClient
         input = $(event.currentTarget)
         group = Groups.findOne(Session.get('currentGroup'))
         return false unless group
-        position = Lists.findOne({}, {sort: {position: -1}}).position + 1
+        lastList = Lists.findOne({}, {sort: {position: -1}})
+        position = if lastList then (lastList.position + 1) else 0
         Lists.insert {owner: Meteor.userId(), groupId: group._id, name: input.val(), position: position}
         input.val('')
     'blur .js-list-input': (event) ->
@@ -172,7 +174,8 @@ if Meteor.isClient
       if event.which == 13
         input = $(event.currentTarget)
         listId = input.parents('[data-id]').attr('data-id')
-        position = Items.findOne({listId: listId}, {sort: {position: -1}}) + 1
+        lastItem = Items.findOne({listId: listId}, {sort: {position: -1}})
+        position = if lastItem then (lastItem.position + 1) else 0
         Items.insert {owner: Meteor.userId(), name: input.val(), listId: listId, position: position}
         input.val('')
     'blur .js-item-input': (event) ->
@@ -200,10 +203,3 @@ if Meteor.isServer
   Accounts.validateNewUser (user) ->
     user.emails[0].address == 'kevin.lin.p@gmail.com'
 
-  ### 
-  Meteor.startup ->
-    Groups.remove {}
-    Lists.remove {}
-    Items.remove {}
-  ###
-  
