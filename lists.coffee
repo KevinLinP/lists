@@ -3,6 +3,7 @@ Items = new Meteor.Collection 'items'
 Lists = new Meteor.Collection 'lists'
 
 
+# TODO: Have the back button work w/ selected group history
 # TODO: double check blur = write
 # TODO: don't use shift as modifier -_-
 # TODO: debug empty input not disappearing when no group selected in production (old meteor bug maybe?)
