@@ -5,7 +5,6 @@ Lists = new Meteor.Collection 'lists'
 
 # TODO: double check blur = write
 # TODO: don't use shift as modifier -_-
-# TODO: debug initial list on load
 # TODO: debug empty input not disappearing when no group selected in production (old meteor bug maybe?)
 # TODO: refactor permissions
 # TODO: fix window unfocus while shifted
@@ -53,10 +52,13 @@ Items.deny {
 }
 
 if Meteor.isClient
-  Meteor.subscribe 'groups'
-  Deps.autorun ->
-    Meteor.subscribe 'lists'
-    Meteor.subscribe 'items'
+  Meteor.subscribe 'groups', ->
+    first = Groups.findOne {}, {sort: {position: 1}}
+    if first
+      Session.set 'currentGroup', first._id
+
+  Meteor.subscribe 'lists'
+  Meteor.subscribe 'items'
 
   Template.groups.groups = ->
     Groups.find {}, {sort: ['position']}
@@ -66,11 +68,6 @@ if Meteor.isClient
 
   Template.lists.lists = ->
     Lists.find {groupId: Session.get('currentGroup')}, {sort: ['position']}
-
-  Meteor.startup ->
-    first = Groups.findOne {}, {sort: ['position']}
-    if first
-      Session.set 'currentGroup', first._id
 
   Template.groups.events {
     'keypress .js-group-new-input': (event) ->
