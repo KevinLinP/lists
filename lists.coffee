@@ -65,7 +65,7 @@ if Meteor.isClient
     group._id == Session.get 'currentGroup'
 
   Template.lists.lists = ->
-    Lists.find {}, {sort: ['position']}
+    Lists.find {groupId: Session.get('currentGroup')}, {sort: ['position']}
 
   Meteor.startup ->
     first = Groups.findOne {}, {sort: ['position']}
