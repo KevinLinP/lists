@@ -5,7 +5,6 @@ Lists = new Meteor.Collection 'lists'
 
 # TODO: double check blur = write
 # TODO: don't use shift as modifier -_-
-# TODO: examine switching groups lag time
 # TODO: debug initial list on load
 # TODO: debug empty input not disappearing when no group selected in production (old meteor bug maybe?)
 # TODO: refactor permissions
@@ -56,8 +55,8 @@ Items.deny {
 if Meteor.isClient
   Meteor.subscribe 'groups'
   Deps.autorun ->
-    Meteor.subscribe 'lists', Session.get('currentGroup')
-    Meteor.subscribe 'items', Session.get('currentGroup')
+    Meteor.subscribe 'lists'
+    Meteor.subscribe 'items'
 
   Template.groups.groups = ->
     Groups.find {}, {sort: ['position']}
@@ -200,9 +199,9 @@ if Meteor.isClient
 if Meteor.isServer
   Meteor.publish 'groups', ->
     Groups.find {owner: this.userId}
-  Meteor.publish 'lists', (groupId) ->
-    Lists.find {owner: this.userId, groupId: groupId}
-  Meteor.publish 'items', (groupId) ->
+  Meteor.publish 'lists', ->
+    Lists.find {owner: this.userId}
+  Meteor.publish 'items', ->
     Items.find {owner: this.userId}
 
   # TODO: fix list order logic on list move
