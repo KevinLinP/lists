@@ -112,6 +112,7 @@ if Meteor.isClient
     $('#groups').sortable {
       items: '> :not(:last-child)'
       handle: '.group-handle'
+      axis: 'x',
       update: (event, ui) ->
         ids = $(event.target).sortable('toArray', {attribute: 'data-id'})
         _.each ids, (id, index, ids) ->
